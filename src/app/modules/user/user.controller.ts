@@ -14,13 +14,29 @@ const createUser=async(req:Request, res:Response)=>{
         message:'User created successfully',
         data:result
     })
-    // sendResponse(res, 201, 'User created successfully', result)
+     sendResponse(res, 201, 'User created successfully', result)
 
     }catch(err:any){
         const formatedError= formatError(500, 'Something went wrong', err.message)
         res.status(formatedError.error.code).json(formatedError)
     }
 }
+
+const getAllUser=async(req:Request, res:Response)=>{
+    try{
+        const allusers= await userServices.getAllUsersFromDB()
+        res.status(201).json({
+            success:true,
+            message:'User created successfully',
+            data:allusers
+        })
+         sendResponse(res, 200, 'User retrieved successfully', allusers)
+    }catch(err:any){
+        const formatedError= formatError(500, 'Something went wrong', err.message)
+        res.status(formatedError.error.code).json(formatedError)
+    }
+}
 export const usersController={
-    createUser
+    createUser,
+    getAllUser
 }
