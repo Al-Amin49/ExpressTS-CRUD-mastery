@@ -97,7 +97,7 @@ const userSchema= new Schema<TUser,UserModel, UserMethods >({
 })
 
 //middleware for password hashing
-userSchema.pre('save', async function (next) {
+userSchema.pre<TUser>('save', async function (next) {
     try {
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const user = this;
@@ -112,6 +112,15 @@ userSchema.pre('save', async function (next) {
     }
   });
 
+
+//for removing password field after response
+  userSchema.set('toJSON', {
+    transform: function (doc, ret) {
+      delete ret.password;
+      return ret;
+    },
+  });
+  
 userSchema.methods.isUserExists=async(userId:number)=>{
     const existingUser=await User.findOne({userId:userId})
     return existingUser

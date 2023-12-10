@@ -15,14 +15,30 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.usersController = void 0;
 const formatError_1 = __importDefault(require("../../../error-handling/formatError"));
 const user_service_1 = require("./user.service");
+const user_validation_1 = __importDefault(require("./user.validation"));
+const filteredUserData = (userData) => {
+    return {
+        userId: userData.userId,
+        username: userData.username,
+        password: userData.password,
+        fullName: userData.fullName,
+        age: userData.age,
+        email: userData.email,
+        isActive: userData.isActive,
+        hobbies: userData.hobbies,
+        address: userData.address
+    };
+};
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { user: userData } = req.body;
-        const result = yield user_service_1.userServices.createUserIntoDB(userData);
+        const zodParsedData = user_validation_1.default.parse(userData);
+        const result = yield user_service_1.userServices.createUserIntoDB(zodParsedData);
+        const filteredData = filteredUserData(result.toJSON());
         res.status(201).json({
             success: true,
             message: 'User created successfully',
-            data: result
+            data: filteredData
         });
     }
     catch (err) {
@@ -40,6 +56,7 @@ const getAllUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         });
     }
     catch (err) {
+        console.log(err);
         const formatedError = (0, formatError_1.default)(500, err.message);
         res.status(formatedError.error.code).json(formatedError);
     }

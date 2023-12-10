@@ -8,9 +8,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const mongoose_1 = require("mongoose");
+const bcrypt_1 = __importDefault(require("bcrypt"));
+const config_1 = __importDefault(require("../../config"));
 const fullNameSchema = new mongoose_1.Schema({
     firstName: {
         type: String,
@@ -101,6 +106,29 @@ const userSchema = new mongoose_1.Schema({
     orders: {
         type: [orderSchema]
     }
+});
+//middleware for password hashing
+userSchema.pre('save', function (next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            // eslint-disable-next-line @typescript-eslint/no-this-alias
+            const user = this;
+            user.password = yield bcrypt_1.default.hash(user.password, Number(config_1.default.bcrypt_salt_rounds));
+        }
+        catch (error) {
+            next(error);
+        }
+        finally {
+            next();
+        }
+    });
+});
+//for removing password field after response
+userSchema.set('toJSON', {
+    transform: function (doc, ret) {
+        delete ret.password;
+        return ret;
+    },
 });
 userSchema.methods.isUserExists = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     const existingUser = yield exports.User.findOne({ userId: userId });

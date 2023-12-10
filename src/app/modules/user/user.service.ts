@@ -11,7 +11,7 @@ const createUserIntoDB=async(userData:TUser)=>{
     return result
 }
 const getAllUsersFromDB=async()=>{
-    const result = await User.find()
+    const result = await User.find({}, {orders:0})
     return result
 }
 const getSingleUserFromDB=async(userId:string)=>{

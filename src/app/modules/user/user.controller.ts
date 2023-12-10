@@ -22,7 +22,7 @@ const createUser=async(req:Request, res:Response)=>{
     const {user:userData}=req.body;
     const zodParsedData= userValidationSchemaZod.parse(userData)
     const result= await userServices.createUserIntoDB(zodParsedData);
-    const filteredData= filteredUserData(result)
+    const filteredData= filteredUserData(result.toJSON())
     
     res.status(201).json({
         success: true,
@@ -38,6 +38,7 @@ const createUser=async(req:Request, res:Response)=>{
 
 const getAllUser=async(req:Request, res:Response)=>{
     try{
+        
         const allusers= await userServices.getAllUsersFromDB()
      
         res.status(200).json({
@@ -46,7 +47,8 @@ const getAllUser=async(req:Request, res:Response)=>{
             data: allusers
           });
     }catch(err:any){
-        const formatedError= formatError(500, err.message)
+    console.log(err)
+         const formatedError= formatError(500, err.message)
         res.status(formatedError.error.code).json(formatedError)
     }
 }
