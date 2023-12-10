@@ -28,6 +28,6 @@ export type TUser = {
 };
 //implement a custom instance method
 export type UserMethods = {
-  isUserExists(id: number): Promise<TUser | null>;
+  isUserExists(userId: number): Promise<TUser | null>;
 };
 export type UserModel = Model<TUser, Record<string, never>, UserMethods>;

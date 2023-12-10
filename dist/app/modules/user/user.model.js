@@ -102,8 +102,8 @@ const userSchema = new mongoose_1.Schema({
         type: [orderSchema]
     }
 });
-userSchema.methods.isUserExists = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const existingUser = yield exports.User.findOne({ id: id });
+userSchema.methods.isUserExists = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const existingUser = yield exports.User.findOne({ userId: userId });
     return existingUser;
 });
 exports.User = (0, mongoose_1.model)('User', userSchema);

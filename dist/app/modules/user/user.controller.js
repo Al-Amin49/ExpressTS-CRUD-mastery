@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.usersController = void 0;
 const formatError_1 = __importDefault(require("../../../error-handling/formatError"));
 const user_service_1 = require("./user.service");
-const success_1 = __importDefault(require("../../../error-handling/success"));
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { user: userData } = req.body;
@@ -25,22 +24,41 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             message: 'User created successfully',
             data: result
         });
-        (0, success_1.default)(res, 201, 'User created successfully', result);
     }
     catch (err) {
-        const formatedError = (0, formatError_1.default)(500, 'Something went wrong', err.message);
+        const formatedError = (0, formatError_1.default)(500, err.message);
         res.status(formatedError.error.code).json(formatedError);
     }
 });
 const getAllUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const allusers = yield user_service_1.userServices.getAllUsersFromDB();
-        res.status(201).json({
+        res.status(200).json({
             success: true,
-            message: 'User created successfully',
+            message: 'User retrived successfully',
             data: allusers
         });
-        (0, success_1.default)(res, 200, 'User retrieved successfully', allusers);
+    }
+    catch (err) {
+        const formatedError = (0, formatError_1.default)(500, err.message);
+        res.status(formatedError.error.code).json(formatedError);
+    }
+});
+const getSingleUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { userId } = req.params;
+        const singleUser = yield user_service_1.userServices.getSingleUserFromDB(userId);
+        if (singleUser === null) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found',
+            });
+        }
+        res.status(200).json({
+            success: true,
+            message: 'single user fetched successfully',
+            data: singleUser
+        });
     }
     catch (err) {
         const formatedError = (0, formatError_1.default)(500, 'Something went wrong', err.message);
@@ -49,5 +67,6 @@ const getAllUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 exports.usersController = {
     createUser,
-    getAllUser
+    getAllUser,
+    getSingleUser
 };

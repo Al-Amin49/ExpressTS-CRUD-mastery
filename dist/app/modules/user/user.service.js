@@ -13,9 +13,9 @@ exports.userServices = void 0;
 const user_model_1 = require("./user.model");
 const createUserIntoDB = (userData) => __awaiter(void 0, void 0, void 0, function* () {
     const UserInfo = new user_model_1.User(userData);
-    // if(await UserInfo.isUserExists(userData.userId)){
-    //     throw new Error('User already exists')
-    // }
+    if (yield UserInfo.isUserExists(userData.userId)) {
+        throw new Error('User already exists');
+    }
     const result = yield UserInfo.save();
     return result;
 });
@@ -23,8 +23,8 @@ const getAllUsersFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield user_model_1.User.find();
     return result;
 });
-const getSingleUserFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield user_model_1.User.findOne({ id: id });
+const getSingleUserFromDB = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield user_model_1.User.findOne({ userId: userId });
     return result;
 });
 const updateUserFromDB = (id, userData) => __awaiter(void 0, void 0, void 0, function* () {

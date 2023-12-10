@@ -4,9 +4,9 @@ import { User } from "./user.model";
 const createUserIntoDB=async(userData:TUser)=>{
    
     const UserInfo=new User(userData);
-    // if(await UserInfo.isUserExists(userData.userId)){
-    //     throw new Error('User already exists')
-    // }
+    if(await UserInfo.isUserExists(userData.userId)){
+        throw new Error('User already exists')
+    }
    const result= await UserInfo.save()
     return result
 }
@@ -14,8 +14,8 @@ const getAllUsersFromDB=async()=>{
     const result = await User.find()
     return result
 }
-const getSingleUserFromDB=async(id:string)=>{
-    const result =await User.findOne({id:id});
+const getSingleUserFromDB=async(userId:string)=>{
+    const result =await User.findOne({userId:userId});
     return result;
 }
 const updateUserFromDB=async(id:string, userData:TUser)=>{

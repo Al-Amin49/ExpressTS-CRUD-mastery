@@ -1,6 +1,7 @@
 import { Schema, model } from "mongoose";
 import { TAddress, TFullName, TOrder, TUser, UserMethods, UserModel } from "./user.interface";
-
+import bcrypt from 'bcrypt';
+import config from "../../config";
 const fullNameSchema= new Schema<TFullName>({
     firstName:{
         type: String,
@@ -95,8 +96,24 @@ const userSchema= new Schema<TUser,UserModel, UserMethods >({
     }
 })
 
-userSchema.methods.isUserExists=async(id:number)=>{
-    const existingUser=await User.findOne({id:id})
+//middleware for password hashing
+userSchema.pre('save', async function (next) {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
+      const user = this;
+      user.password = await bcrypt.hash(
+        user.password,
+        Number(config.bcrypt_salt_rounds),
+      );
+    } catch (error:any) {
+      next(error);
+    } finally {
+      next();
+    }
+  });
+
+userSchema.methods.isUserExists=async(userId:number)=>{
+    const existingUser=await User.findOne({userId:userId})
     return existingUser
 }
 export const User= model<TUser, UserModel>('User', userSchema);
