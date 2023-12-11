@@ -166,6 +166,26 @@ const getAllOrdersById = (req, res) => __awaiter(void 0, void 0, void 0, functio
         res.status(formatedError.error.code).json(formatedError);
     }
 });
+const calculatePrice = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { userId } = req.params;
+        const result = yield user_service_1.userServices.calculatePriceFromDB(userId);
+        res.status(200).json({
+            success: true,
+            message: 'Total price calculated successfully!!',
+            data: result
+        });
+    }
+    catch (err) {
+        if (err.message === 'User not found') {
+            return res
+                .status((0, formatError_1.default)(404, err.message).error.code)
+                .json((0, formatError_1.default)(404, err.message));
+        }
+        const formatedError = (0, formatError_1.default)(500, err.message);
+        res.status(formatedError.error.code).json(formatedError);
+    }
+});
 exports.usersController = {
     createUser,
     getAllUser,
@@ -173,5 +193,6 @@ exports.usersController = {
     updatedUser,
     deleteUser,
     insertProduct,
-    getAllOrdersById
+    getAllOrdersById,
+    calculatePrice
 };

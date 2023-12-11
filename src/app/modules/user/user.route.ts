@@ -16,6 +16,8 @@ router.delete('/users/:userId', usersController.deleteUser);
 router.put('/users/:userId/orders', usersController.insertProduct)
 //order by id
 router.get('/users/:userId/orders',usersController.getAllOrdersById)
+//calculate price by id
+router.get('/users/:userId/orders/total-price',usersController.calculatePrice)
  
 
 

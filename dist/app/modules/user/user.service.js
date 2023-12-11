@@ -46,6 +46,16 @@ const getOrdersByIdFromDB = (userId) => __awaiter(void 0, void 0, void 0, functi
     const result = user_model_1.User.findOne({ userId: userId }).select('orders');
     return result;
 });
+const calculatePriceFromDB = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield user_model_1.User.findOne({ userId: userId }).select('orders').lean();
+    if (!user) {
+        throw new Error('User not found');
+    }
+    const totalPrice = ((user === null || user === void 0 ? void 0 : user.orders) || []).reduce((total, order) => {
+        return total + (order.price || 0) * (order.quantity || 0);
+    }, 0);
+    return totalPrice;
+});
 exports.userServices = {
     createUserIntoDB,
     getAllUsersFromDB,
@@ -53,5 +63,6 @@ exports.userServices = {
     updateUserFromDB,
     deleteUserFromDB,
     insertProductToDB,
-    getAllOrdersFromDB: getOrdersByIdFromDB
+    getAllOrdersFromDB: getOrdersByIdFromDB,
+    calculatePriceFromDB
 };

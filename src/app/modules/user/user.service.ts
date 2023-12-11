@@ -54,6 +54,23 @@ const result=User.findOne({userId:userId}).select('orders')
 
 return result;
 }
+const calculatePriceFromDB=async(userId:number | string)=>{
+    const user= await User.findOne({userId:userId}).select('orders').lean()
+    if (!user) {
+        throw new Error('User not found');
+      }
+      const totalPrice = (user?.orders || []).reduce(
+        (total: number, order:{ price?: number; quantity: number }) => {
+          return total + (order.price || 0) * (order.quantity || 0);
+        },
+        0
+      );
+      return totalPrice;
+    };
+
+
+
+
 
 
 
@@ -64,5 +81,6 @@ export const userServices ={
     updateUserFromDB,
     deleteUserFromDB,
     insertProductToDB,
-    getAllOrdersFromDB: getOrdersByIdFromDB
+    getAllOrdersFromDB: getOrdersByIdFromDB,
+    calculatePriceFromDB
 }
