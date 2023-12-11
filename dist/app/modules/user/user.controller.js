@@ -84,14 +84,11 @@ const getSingleUser = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 });
 const updatedUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const { userId } = req.params;
         const userData = req.body;
-        console.log('user data', userData);
-        const userId = req.params.userId;
-        const userId2 = Number(userId);
-        const zodParsedData = user_validation_1.updateUserSchema.safeParse({ user: userData });
-        console.log('parsed data', zodParsedData);
-        const result = yield user_service_1.userServices.updateUserFromDB(userId2, userData);
-        console.log('result', result);
+        const zodParsedData = user_validation_1.createUserValidationSchema.parse(userData);
+        console.log('parse data', zodParsedData);
+        const result = yield user_service_1.userServices.updateUserFromDB(userId, zodParsedData);
         res.status(200).json({
             success: true,
             message: 'User updated successfully',

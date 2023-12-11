@@ -23,23 +23,14 @@ const getSingleUserFromDB=async(userId:string)=>{
     return result;
 }
 
-const updateUserFromDB = async (userId: number, userData: Partial<TUser>)=> {
-    try {
-        const updatedUser = await User.findOneAndUpdate(
+const updateUserFromDB = async (userId: number | string, userData: Partial<TUser>)=> {
+        const result = await User.findOneAndUpdate(
               {userId} ,
-            userData,
+            {$set: userData},
             { new: true, runValidators: true ,projection: { orders: 0}}, 
         );
-
-        if (!updatedUser) {
-            throw new Error('User not found');
-        }
-
-        return updatedUser;
-    } catch (error:any) {
-        console.error('Error updating user:', error.message);
-        
-    }
+        return result;
+    
 };
 
 

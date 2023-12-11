@@ -31,16 +31,8 @@ const getSingleUserFromDB = (userId) => __awaiter(void 0, void 0, void 0, functi
     return result;
 });
 const updateUserFromDB = (userId, userData) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const updatedUser = yield user_model_1.User.findOneAndUpdate({ userId }, userData, { new: true, runValidators: true, projection: { orders: 0 } });
-        if (!updatedUser) {
-            throw new Error('User not found');
-        }
-        return updatedUser;
-    }
-    catch (error) {
-        console.error('Error updating user:', error.message);
-    }
+    const result = yield user_model_1.User.findOneAndUpdate({ userId }, { $set: userData }, { new: true, runValidators: true, projection: { orders: 0 } });
+    return result;
 });
 const deleteUserFromDB = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield user_model_1.User.findOneAndUpdate({ userId: userId });

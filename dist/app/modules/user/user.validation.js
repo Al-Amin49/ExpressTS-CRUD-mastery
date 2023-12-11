@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateOrderSchema = exports.updateUserSchema = exports.createOrderSchema = exports.createUserValidationSchema = void 0;
+exports.createOrderSchema = exports.createUserValidationSchema = void 0;
 const zod_1 = require("zod");
 const fullNameSchema = zod_1.z.object({
     firstName: zod_1.z.string().min(1).max(20),
@@ -17,12 +17,7 @@ const orderSchema = zod_1.z.object({
     quantity: zod_1.z.number(),
 });
 const createUserValidationSchema = zod_1.z.object({
-    userId: zod_1.z
-        .number()
-        .refine((data) => data !== undefined, {
-        message: 'userId is required',
-    })
-        .transform((data) => data),
+    userId: zod_1.z.number(),
     username: zod_1.z.string(),
     password: zod_1.z.string().min(1).max(20),
     fullName: fullNameSchema,
@@ -40,14 +35,3 @@ const createOrderSchema = zod_1.z.object({
     quantity: zod_1.z.number(),
 });
 exports.createOrderSchema = createOrderSchema;
-const validUpdateData = {
-    userId: 123,
-    username: 'john_doe',
-    // ... other fields you want to update
-};
-const updateUserSchema = createUserValidationSchema.partial();
-exports.updateUserSchema = updateUserSchema;
-const isValid = updateUserSchema.safeParse(validUpdateData);
-console.log(isValid);
-const updateOrderSchema = createOrderSchema.partial();
-exports.updateOrderSchema = updateOrderSchema;

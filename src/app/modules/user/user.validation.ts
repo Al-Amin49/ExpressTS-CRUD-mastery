@@ -1,11 +1,11 @@
-import { z } from 'zod';
+import {  z } from 'zod';
 
 const fullNameSchema = z.object({
   firstName: z.string().min(1).max(20),
   lastName: z.string().min(1).max(15),
 });
 
- const addressSchema = z.object({
+const addressSchema = z.object({
   street: z.string().min(1),
   city: z.string().min(1),
   country: z.string().min(1),
@@ -18,12 +18,7 @@ const orderSchema = z.object({
 });
 
 const createUserValidationSchema = z.object({
-    userId: z
-    .number()
-    .refine((data) => data !== undefined, {
-      message: 'userId is required',
-    })
-    .transform((data) => data as number),
+  userId: z.number(),
   username: z.string(),
   password: z.string().min(1).max(20),
   fullName: fullNameSchema,
@@ -39,21 +34,9 @@ const createOrderSchema = z.object({
   price: z.number(),
   quantity: z.number(),
 });
-const validUpdateData = {
-  userId: 123,
-  username: 'john_doe',
-  // ... other fields you want to update
-};
 
-
-const updateUserSchema = createUserValidationSchema.partial();
-const isValid = updateUserSchema.safeParse(validUpdateData);
-console.log(isValid);
-const updateOrderSchema = createOrderSchema.partial();
 
 export {
   createUserValidationSchema,
   createOrderSchema,
-  updateUserSchema,
-  updateOrderSchema,
 };

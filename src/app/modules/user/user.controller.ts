@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import formatError from '../../../error-handling/formatError';
 import { userServices } from './user.service';
-import { createUserValidationSchema, updateUserSchema } from './user.validation';
+import { createUserValidationSchema } from './user.validation';
 
 const filteredUserData = (userData: any) => {
   return {
@@ -73,21 +73,19 @@ const getSingleUser = async (req: Request, res: Response) => {
 
 const updatedUser = async (req: Request, res: Response) => {
   try {
-      const userData = req.body;
-      console.log('user data', userData)
-      const userId = req.params.userId;
-      const userId2 = Number(userId);
-     
-      const zodParsedData = updateUserSchema.safeParse({user:userData});
-      console.log('parsed data', zodParsedData)
-      const result = await userServices.updateUserFromDB(userId2, userData);
-      console.log('result',result)
-   
+
+    const {userId} = req.params;
+    const userData=req.body;
+
+    const zodParsedData = createUserValidationSchema.parse(userData );
+console.log('parse data', zodParsedData)
+      const result = await userServices.updateUserFromDB(userId, zodParsedData);
       res.status(200).json({
-          success: true,
-          message: 'User updated successfully',
-          data: result,
+        success: true,
+        message: 'User updated successfully',
+        data: result,
       });
+    
   } catch (err: any) {
     console.error('Error in update process:', err.message);
     if (err.message === 'User not found') {
