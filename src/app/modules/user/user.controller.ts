@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import formatError from '../../../error-handling/formatError';
 import { userServices } from './user.service';
-import { createUserValidationSchema } from './user.validation';
+import { createUserValidationSchema, updateUserSchema } from './user.validation';
 
 const filteredUserData = (userData: any) => {
   return {
@@ -77,9 +77,9 @@ const updatedUser = async (req: Request, res: Response) => {
     const {userId} = req.params;
     const userData=req.body;
 
-    const zodParsedData = createUserValidationSchema.parse(userData );
-console.log('parse data', zodParsedData)
+    const zodParsedData = updateUserSchema.parse(userData);
       const result = await userServices.updateUserFromDB(userId, zodParsedData);
+     
       res.status(200).json({
         success: true,
         message: 'User updated successfully',

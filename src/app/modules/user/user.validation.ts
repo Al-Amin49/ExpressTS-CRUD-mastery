@@ -34,9 +34,21 @@ const createOrderSchema = z.object({
   price: z.number(),
   quantity: z.number(),
 });
-
+const updateUserSchema = z.object({
+  userId: z.number(),
+  username: z.string(),
+  password: z.string().min(1).max(20),
+  fullName: fullNameSchema.optional(), // Make the properties optional
+  age: z.number().optional(),
+  email: z.string().email().optional(),
+  isActive: z.boolean().optional(),
+  hobbies: z.array(z.string()).optional(),
+  address: addressSchema.optional(),
+  orders: z.array(orderSchema).optional(),
+});
 
 export {
   createUserValidationSchema,
   createOrderSchema,
+  updateUserSchema
 };

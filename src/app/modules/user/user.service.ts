@@ -23,12 +23,15 @@ const getSingleUserFromDB=async(userId:string)=>{
     return result;
 }
 
-const updateUserFromDB = async (userId: number | string, userData: Partial<TUser>)=> {
-        const result = await User.findOneAndUpdate(
+const updateUserFromDB = async (userId: number | string, userData:Partial<TUser>):Promise<TUser |null>=> {
+    console.log('Update User ID:', userId);
+    console.log('Update User Data:', userData);
+    
+    const result = await User.findOneAndUpdate(
               {userId} ,
             {$set: userData},
-            { new: true, runValidators: true ,projection: { orders: 0}}, 
-        );
+            { new: true, runValidators: true }, 
+        )
         return result;
     
 };
