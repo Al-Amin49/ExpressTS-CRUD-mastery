@@ -20,22 +20,31 @@ const createUserIntoDB = (userData) => __awaiter(void 0, void 0, void 0, functio
     return result;
 });
 const getAllUsersFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield user_model_1.User.find({}, { orders: 0 });
+    const result = yield user_model_1.User.find({}, { orders: 0, _id: false }).exec();
     return result;
 });
 const getSingleUserFromDB = (userId) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield user_model_1.User.findOne({ userId: userId });
+    const result = yield user_model_1.User.findOne({ userId: userId }, { orders: 0, _id: false }).exec();
+    if (!result) {
+        throw new Error('User not found');
+    }
     return result;
 });
-const updateUserFromDB = (id, userData) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield user_model_1.User.findByIdAndUpdate(id, userData, {
-        new: true,
-        runValidators: true
-    });
-    return result;
+const updateUserFromDB = (userId, userData) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const updatedUser = yield user_model_1.User.findOneAndUpdate({ userId: userId }, userData, { new: true, runValidators: true });
+        if (!updatedUser) {
+            throw new Error('User not found');
+        }
+        return updatedUser;
+    }
+    catch (error) {
+        console.error('Error updating user:', error.message);
+        throw new Error('Invalid userId format');
+    }
 });
-const deleteUserFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield user_model_1.User.findByIdAndDelete(id);
+const deleteUserFromDB = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield user_model_1.User.findByIdAndDelete(userId);
     return result;
 });
 exports.userServices = {

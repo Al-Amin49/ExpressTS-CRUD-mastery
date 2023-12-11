@@ -6,6 +6,9 @@ router
   .route('/users')
   .get(usersController.getAllUser)
   .post(usersController.createUser);
-router.route('/users/:userId').get(usersController.getSingleUser);
+router
+  .route('/users/:userId')
+  .get(usersController.getSingleUser)
+  .put(usersController.updatedUser);
 
 export const userRoutes = router;

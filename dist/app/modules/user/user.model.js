@@ -53,15 +53,12 @@ const addressSchema = new mongoose_1.Schema({
 const orderSchema = new mongoose_1.Schema({
     productName: {
         type: String,
-        required: [true, 'Product name is required']
     },
     price: {
         type: Number,
-        required: [true, 'Price is required']
     },
     quantity: {
         type: Number,
-        required: [true, 'Quantity is required']
     }
 });
 const userSchema = new mongoose_1.Schema({

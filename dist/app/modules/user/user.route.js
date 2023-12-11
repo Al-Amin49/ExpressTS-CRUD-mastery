@@ -11,5 +11,8 @@ router
     .route('/users')
     .get(user_controller_1.usersController.getAllUser)
     .post(user_controller_1.usersController.createUser);
-router.route('/users/:userId').get(user_controller_1.usersController.getSingleUser);
+router
+    .route('/users/:userId')
+    .get(user_controller_1.usersController.getSingleUser)
+    .put(user_controller_1.usersController.updatedUser);
 exports.userRoutes = router;

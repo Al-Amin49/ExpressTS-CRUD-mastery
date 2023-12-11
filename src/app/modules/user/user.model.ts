@@ -41,15 +41,12 @@ const addressSchema=new Schema<TAddress>({
 const orderSchema= new Schema<TOrder>({
     productName:{
         type:String,
-        required:[true, 'Product name is required']
     },
     price:{
         type:Number,
-        required:[true, 'Price is required']
     },
     quantity:{
         type:Number,
-        required:[true, 'Quantity is required']
     }
 })
 const userSchema= new Schema<TUser,UserModel, UserMethods >({
@@ -97,7 +94,7 @@ const userSchema= new Schema<TUser,UserModel, UserMethods >({
 })
 
 //middleware for password hashing
-userSchema.pre<TUser>('save', async function (next) {
+userSchema.pre('save', async function (next) {
     try {
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const user = this;

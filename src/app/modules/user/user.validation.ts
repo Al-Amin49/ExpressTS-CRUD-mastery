@@ -1,39 +1,50 @@
 import { z } from 'zod';
 
-const fullNameValidationSchema = z.object({
-  firstName: z.string().min(1).max(20).refine(value => /^[A-Z][a-z]*$/.test(value), {
-    message: 'First name is not in capitalize format',
-  }),
+const fullNameSchema = z.object({
+  firstName: z.string().min(1).max(20),
   lastName: z.string().min(1).max(15),
 });
 
-const addressValidationSchema = z.object({
+const addressSchema = z.object({
   street: z.string().min(1),
   city: z.string().min(1),
   country: z.string().min(1),
 });
 
-const orderValidationSchema = z.object({
-  productName: z.string().min(1),
+const orderSchema = z.object({
+  productName: z.string(),
   price: z.number(),
   quantity: z.number(),
 });
 
-const userValidationSchemaZod = z.object({
-  userId: z.number(),
-  username: z.string().min(1).refine(value => /^[a-zA-Z0-9]+$/.test(value), {
-    message: 'Username must be alphanumeric',
-  }),
+const createUserValidationSchema = z.object({
+    userId: z
+    .number()
+    .refine((data) => data !== undefined, {
+      message: 'userId is required',
+    })
+    .transform((data) => data as number),
+  username: z.string(),
   password: z.string().min(1).max(20),
-  fullName: fullNameValidationSchema,
-  age: z.number().min(1).max(99),
-  email: z.string().min(1).refine(value => /^\S+@\S+\.\S+$/.test(value), {
-    message: 'Invalid email address',
-  }),
+  fullName: fullNameSchema,
+  age: z.number(),
+  email: z.string().email(),
   isActive: z.boolean(),
   hobbies: z.array(z.string()),
-  address: addressValidationSchema,
-  orders: z.array(orderValidationSchema),
+  address: addressSchema,
+  orders: z.array(orderSchema),
 });
+const createOrderSchema = z.object({
+  productName: z.string(),
+  price: z.number(),
+  quantity: z.number(),
+});
+const updateUserSchema = createUserValidationSchema.partial().strip();
+const updateOrderSchema = createOrderSchema.partial();
 
-export default userValidationSchemaZod;
+export {
+  createUserValidationSchema,
+  createOrderSchema,
+  updateUserSchema,
+  updateOrderSchema,
+};

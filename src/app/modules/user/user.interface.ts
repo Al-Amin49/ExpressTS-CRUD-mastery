@@ -24,7 +24,7 @@ export type TUser = {
   isActive: boolean;
   hobbies: string[];
   address: TAddress;
-  orders: TOrder[];
+  orders?: TOrder[];
 };
 //implement a custom instance method
 export type UserMethods = {
