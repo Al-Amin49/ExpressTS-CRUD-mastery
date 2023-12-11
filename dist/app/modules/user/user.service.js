@@ -19,7 +19,7 @@ const createUserIntoDB = (userData) => __awaiter(void 0, void 0, void 0, functio
     return result;
 });
 const getAllUsersFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield user_model_1.User.find().select("userId username fullName age email address");
+    const result = yield user_model_1.User.find().select("userId username fullName age email address ");
     return result;
 });
 const getSingleUserFromDB = (userId) => __awaiter(void 0, void 0, void 0, function* () {
@@ -37,10 +37,16 @@ const deleteUserFromDB = (userId) => __awaiter(void 0, void 0, void 0, function*
     yield user_model_1.User.findOneAndUpdate({ userId: userId });
     return null;
 });
+const insertProductToDB = (userId, productData) => __awaiter(void 0, void 0, void 0, function* () {
+    const { productName, price, quantity } = productData;
+    yield user_model_1.User.findOneAndUpdate({ userId, 'orders': { $exists: true } }, { $push: { 'orders': { productName, price, quantity } } }, { upsert: true, new: true });
+    return null;
+});
 exports.userServices = {
     createUserIntoDB,
     getAllUsersFromDB,
     getSingleUserFromDB,
     updateUserFromDB,
-    deleteUserFromDB
+    deleteUserFromDB,
+    insertProductToDB
 };

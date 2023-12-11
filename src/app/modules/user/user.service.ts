@@ -1,5 +1,5 @@
 
-import { TUser } from "./user.interface";
+import { TOrder, TUser } from "./user.interface";
 import { User } from "./user.model";
 
 const createUserIntoDB=async(userData:TUser)=>{
@@ -11,7 +11,7 @@ const createUserIntoDB=async(userData:TUser)=>{
 }
 const getAllUsersFromDB=async()=>{
     const result = await User.find().select(
-        "userId username fullName age email address"
+        "userId username fullName age email address "
       );
     return result
 }
@@ -36,15 +36,27 @@ const updateUserFromDB = async (userId: number | string, userData:Partial<TUser>
     
 };
 
-
 const deleteUserFromDB=async(userId:number | string)=>{
   await User.findOneAndUpdate({userId:userId})
     return null;
 }
+const insertProductToDB=async(userId:number|string, productData:TOrder)=>{
+const {productName, price, quantity}=productData;
+await User.findOneAndUpdate(
+    { userId, 'orders': { $exists: true } },
+    { $push: { 'orders': { productName, price, quantity } } },
+    { upsert: true, new: true }
+  );
+return null;
+
+}
+
+
 export const userServices ={
     createUserIntoDB,
     getAllUsersFromDB,
     getSingleUserFromDB,
     updateUserFromDB,
-    deleteUserFromDB
+    deleteUserFromDB,
+    insertProductToDB
 }

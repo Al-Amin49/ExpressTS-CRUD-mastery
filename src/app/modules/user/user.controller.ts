@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import formatError from '../../../error-handling/formatError';
 import { userServices } from './user.service';
-import { createUserValidationSchema, updateUserSchema } from './user.validation';
+import { createOrderSchema, createUserValidationSchema, updateUserSchema } from './user.validation';
 
 const filteredUserData = (userData: any) => {
   return {
@@ -119,6 +119,29 @@ const deleteUser = async (req: Request, res: Response) => {
     res.status(formatedError.error.code).json(formatedError);
   }
 };
+const insertProduct = async (req: Request, res: Response) => {
+  try {
+    const  {userId}  = req.params;
+    const order=req.body;
+    const zodParsedData= createOrderSchema.parse(order);
+    const result= await userServices.insertProductToDB(userId, zodParsedData)
+
+    res.status(200).json({
+      success:true,
+      message:'Order created successfully!',
+      data:result
+    })
+   
+  } catch (err: any) {
+    if (err.message === 'User not found') {
+      return res
+        .status(formatError(404, err.message).error.code)
+        .json(formatError(404, err.message));
+    }
+    const formatedError = formatError(500, err.message);
+    res.status(formatedError.error.code).json(formatedError);
+  }
+};
 
 
 
@@ -127,5 +150,6 @@ export const usersController = {
   getAllUser,
   getSingleUser,
   updatedUser,
-  deleteUser
+  deleteUser,
+  insertProduct
 };

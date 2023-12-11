@@ -124,10 +124,33 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.status(formatedError.error.code).json(formatedError);
     }
 });
+const insertProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { userId } = req.params;
+        const order = req.body;
+        const zodParsedData = user_validation_1.createOrderSchema.parse(order);
+        const result = yield user_service_1.userServices.insertProductToDB(userId, zodParsedData);
+        res.status(200).json({
+            success: true,
+            message: 'Order created successfully!',
+            data: result
+        });
+    }
+    catch (err) {
+        if (err.message === 'User not found') {
+            return res
+                .status((0, formatError_1.default)(404, err.message).error.code)
+                .json((0, formatError_1.default)(404, err.message));
+        }
+        const formatedError = (0, formatError_1.default)(500, err.message);
+        res.status(formatedError.error.code).json(formatedError);
+    }
+});
 exports.usersController = {
     createUser,
     getAllUser,
     getSingleUser,
     updatedUser,
-    deleteUser
+    deleteUser,
+    insertProduct
 };

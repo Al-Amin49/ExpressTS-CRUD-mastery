@@ -12,6 +12,8 @@ router
   .put(usersController.updatedUser);
 
 router.delete('/users/:userId', usersController.deleteUser);
+//insert orders
+router.put('/users/:userId/orders', usersController.insertProduct)
  
 
 

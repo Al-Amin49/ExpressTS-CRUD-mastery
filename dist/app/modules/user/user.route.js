@@ -16,4 +16,6 @@ router
     .get(user_controller_1.usersController.getSingleUser)
     .put(user_controller_1.usersController.updatedUser);
 router.delete('/users/:userId', user_controller_1.usersController.deleteUser);
+//insert orders
+router.put('/users/:userId/orders', user_controller_1.usersController.insertProduct);
 exports.userRoutes = router;
