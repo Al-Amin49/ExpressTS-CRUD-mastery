@@ -26,8 +26,7 @@ export type TUser = {
   address: TAddress;
   orders?: TOrder[];
 };
-//implement a custom instance method
-export type UserMethods = {
-  isUserExists(userId: number): Promise<TUser | null>;
-};
-export type UserModel = Model<TUser, Record<string, never>, UserMethods>;
+//implement a custom static method
+export interface UserModel extends Model<TUser>{
+  isUserExists(userId:number):Promise<TUser | null>
+}

@@ -12,15 +12,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userServices = void 0;
 const user_model_1 = require("./user.model");
 const createUserIntoDB = (userData) => __awaiter(void 0, void 0, void 0, function* () {
-    const UserInfo = new user_model_1.User(userData);
-    if (yield UserInfo.isUserExists(userData.userId)) {
-        throw new Error('User already exists');
+    if (yield user_model_1.User.isUserExists(Number(userData.userId))) {
+        throw new Error('User aready exists');
     }
-    const result = yield UserInfo.save();
+    const result = yield user_model_1.User.create(userData);
     return result;
 });
 const getAllUsersFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield user_model_1.User.find({}, { orders: 0 }).exec();
+    const result = yield user_model_1.User.find().select("userId username fullName age email address");
     return result;
 });
 const getSingleUserFromDB = (userId) => __awaiter(void 0, void 0, void 0, function* () {
@@ -31,14 +30,12 @@ const getSingleUserFromDB = (userId) => __awaiter(void 0, void 0, void 0, functi
     return result;
 });
 const updateUserFromDB = (userId, userData) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log('Update User ID:', userId);
-    console.log('Update User Data:', userData);
-    const result = yield user_model_1.User.findOneAndUpdate({ userId }, { $set: userData }, { new: true, runValidators: true });
+    const result = yield user_model_1.User.findOneAndUpdate({ userId }, { $set: userData }, { new: true, runValidators: true, projection: { orders: 0 } });
     return result;
 });
 const deleteUserFromDB = (userId) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield user_model_1.User.findOneAndUpdate({ userId: userId });
-    return result;
+    yield user_model_1.User.findOneAndUpdate({ userId: userId });
+    return null;
 });
 exports.userServices = {
     createUserIntoDB,

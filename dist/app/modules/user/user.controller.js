@@ -52,7 +52,7 @@ const getAllUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         const allusers = yield user_service_1.userServices.getAllUsersFromDB();
         res.status(200).json({
             success: true,
-            message: 'User retrived successfully',
+            message: 'Users fetched successfully',
             data: allusers,
         });
     }
@@ -68,7 +68,7 @@ const getSingleUser = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         const singleUser = yield user_service_1.userServices.getSingleUserFromDB(userId);
         res.status(200).json({
             success: true,
-            message: 'single user fetched successfully',
+            message: ' user fetched successfully',
             data: singleUser,
         });
     }
@@ -95,7 +95,6 @@ const updatedUser = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         });
     }
     catch (err) {
-        console.error('Error in update process:', err.message);
         if (err.message === 'User not found') {
             return res
                 .status((0, formatError_1.default)(404, err.message).error.code)
@@ -107,31 +106,22 @@ const updatedUser = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 });
 const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const userId = req.params.userId;
-        const deletedUser = yield user_service_1.userServices.deleteUserFromDB(Number(userId));
-        if (deletedUser) {
-            res.status(200).json({
-                success: true,
-                message: 'User deleted successfully',
-                data: null,
-            });
-        }
-        else {
-            res.status(404).json({
-                success: false,
-                message: 'User not found',
-                error: {
-                    code: 404,
-                    description: 'User not found!',
-                },
-            });
-        }
+        const { userId } = req.params;
+        const deletedUser = yield user_service_1.userServices.deleteUserFromDB(userId);
+        res.status(200).json({
+            success: true,
+            message: 'Data deleted successfully',
+            data: deletedUser
+        });
     }
     catch (err) {
-        res.status(500).json({
-            success: false,
-            message: err.message || 'Internal Server Error',
-        });
+        if (err.message === 'User not found') {
+            return res
+                .status((0, formatError_1.default)(404, err.message).error.code)
+                .json((0, formatError_1.default)(404, err.message));
+        }
+        const formatedError = (0, formatError_1.default)(500, err.message);
+        res.status(formatedError.error.code).json(formatedError);
     }
 });
 exports.usersController = {

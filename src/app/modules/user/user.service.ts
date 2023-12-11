@@ -3,20 +3,22 @@ import { TUser } from "./user.interface";
 import { User } from "./user.model";
 
 const createUserIntoDB=async(userData:TUser)=>{
-   
-    const UserInfo=new User(userData);
-    if(await UserInfo.isUserExists(userData.userId)){
-        throw new Error('User already exists')
-    }
-   const result= await UserInfo.save()
+    if(await User.isUserExists(Number(userData.userId))){
+        throw new Error('User aready exists')
+       }
+    const result= await User.create(userData)
     return result
 }
 const getAllUsersFromDB=async()=>{
-    const result = await User.find({}, {orders:0}).exec()
+    const result = await User.find().select(
+        "userId username fullName age email address"
+      );
     return result
 }
-const getSingleUserFromDB=async(userId:string)=>{
+const getSingleUserFromDB=async(userId:number | string)=>{
+    
     const result =await User.findOne({userId:userId}, {orders:0}).exec();
+    
     if(!result){
         throw new Error('User not found')
     }
@@ -24,22 +26,20 @@ const getSingleUserFromDB=async(userId:string)=>{
 }
 
 const updateUserFromDB = async (userId: number | string, userData:Partial<TUser>):Promise<TUser |null>=> {
-    console.log('Update User ID:', userId);
-    console.log('Update User Data:', userData);
-    
+
     const result = await User.findOneAndUpdate(
               {userId} ,
             {$set: userData},
-            { new: true, runValidators: true }, 
+            { new: true, runValidators: true, projection:{orders:0} }, 
         )
         return result;
     
 };
 
 
-const deleteUserFromDB=async(userId:number)=>{
-    const result= await User.findOneAndUpdate({userId:userId})
-    return result;
+const deleteUserFromDB=async(userId:number | string)=>{
+  await User.findOneAndUpdate({userId:userId})
+    return null;
 }
 export const userServices ={
     createUserIntoDB,

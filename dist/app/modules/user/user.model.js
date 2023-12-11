@@ -120,8 +120,12 @@ userSchema.set('toJSON', {
         return ret;
     },
 });
-userSchema.methods.isUserExists = (userId) => __awaiter(void 0, void 0, void 0, function* () {
-    const existingUser = yield exports.User.findOne({ userId: userId });
+// userSchema.methods.isUserExists=async(userId:number)=>{
+//     const existingUser=await User.findOne({userId:userId})
+//     return existingUser
+// }
+userSchema.statics.isUserExists = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const existingUser = yield exports.User.findOne({ userId });
     return existingUser;
 });
 exports.User = (0, mongoose_1.model)('User', userSchema);

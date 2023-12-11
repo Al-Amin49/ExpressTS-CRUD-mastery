@@ -42,7 +42,7 @@ const getAllUser = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      message: 'User retrived successfully',
+      message: 'Users fetched successfully',
       data: allusers,
     });
   } catch (err: any) {
@@ -57,7 +57,7 @@ const getSingleUser = async (req: Request, res: Response) => {
     const singleUser = await userServices.getSingleUserFromDB(userId);
     res.status(200).json({
       success: true,
-      message: 'single user fetched successfully',
+      message: ' user fetched successfully',
       data: singleUser,
     });
   } catch (err: any) {
@@ -87,7 +87,7 @@ const updatedUser = async (req: Request, res: Response) => {
       });
     
   } catch (err: any) {
-    console.error('Error in update process:', err.message);
+  
     if (err.message === 'User not found') {
       return res
         .status(formatError(404, err.message).error.code)
@@ -100,30 +100,23 @@ const updatedUser = async (req: Request, res: Response) => {
 
 const deleteUser = async (req: Request, res: Response) => {
   try {
-    const  userId  = req.params.userId;
-    const deletedUser = await userServices.deleteUserFromDB(Number(userId));
+    const  {userId}  = req.params;
+    const deletedUser = await userServices.deleteUserFromDB(userId);
 
-    if (deletedUser) {
-      res.status(200).json({
-        success: true,
-        message: 'User deleted successfully',
-        data: null,
-      });
-    } else {
-      res.status(404).json({
-        success: false,
-        message: 'User not found',
-        error: {
-          code: 404,
-          description: 'User not found!',
-        },
-      });
-    }
+    res.status(200).json({
+      success:true,
+      message:'Data deleted successfully',
+      data:deletedUser
+    })
+   
   } catch (err: any) {
-    res.status(500).json({
-      success: false,
-      message: err.message || 'Internal Server Error',
-    });
+    if (err.message === 'User not found') {
+      return res
+        .status(formatError(404, err.message).error.code)
+        .json(formatError(404, err.message));
+    }
+    const formatedError = formatError(500, err.message);
+    res.status(formatedError.error.code).json(formatedError);
   }
 };
 
