@@ -20,11 +20,11 @@ const createUserIntoDB = (userData) => __awaiter(void 0, void 0, void 0, functio
     return result;
 });
 const getAllUsersFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield user_model_1.User.find({}, { orders: 0, _id: false }).exec();
+    const result = yield user_model_1.User.find({}, { orders: 0 }).exec();
     return result;
 });
 const getSingleUserFromDB = (userId) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield user_model_1.User.findOne({ userId: userId }, { orders: 0, _id: false }).exec();
+    const result = yield user_model_1.User.findOne({ userId: userId }, { orders: 0 }).exec();
     if (!result) {
         throw new Error('User not found');
     }
@@ -32,7 +32,7 @@ const getSingleUserFromDB = (userId) => __awaiter(void 0, void 0, void 0, functi
 });
 const updateUserFromDB = (userId, userData) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const updatedUser = yield user_model_1.User.findOneAndUpdate({ userId: userId }, userData, { new: true, runValidators: true });
+        const updatedUser = yield user_model_1.User.findOneAndUpdate({ userId }, userData, { new: true, runValidators: true, projection: { orders: 0 } });
         if (!updatedUser) {
             throw new Error('User not found');
         }
@@ -40,11 +40,10 @@ const updateUserFromDB = (userId, userData) => __awaiter(void 0, void 0, void 0,
     }
     catch (error) {
         console.error('Error updating user:', error.message);
-        throw new Error('Invalid userId format');
     }
 });
 const deleteUserFromDB = (userId) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield user_model_1.User.findByIdAndDelete(userId);
+    const result = yield user_model_1.User.findOneAndUpdate({ userId: userId });
     return result;
 });
 exports.userServices = {

@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+
 import { TUser } from "./user.interface";
 import { User } from "./user.model";
 
@@ -12,23 +12,23 @@ const createUserIntoDB=async(userData:TUser)=>{
     return result
 }
 const getAllUsersFromDB=async()=>{
-    const result = await User.find({}, {orders:0, _id:false}).exec()
+    const result = await User.find({}, {orders:0}).exec()
     return result
 }
 const getSingleUserFromDB=async(userId:string)=>{
-    const result =await User.findOne({userId:userId}, {orders:0, _id:false}).exec();
+    const result =await User.findOne({userId:userId}, {orders:0}).exec();
     if(!result){
         throw new Error('User not found')
     }
     return result;
 }
 
-const updateUserFromDB = async (userId: number, userData: Partial<TUser>): Promise<TUser | null> => {
+const updateUserFromDB = async (userId: number, userData: Partial<TUser>)=> {
     try {
         const updatedUser = await User.findOneAndUpdate(
-            { userId: userId },
+              {userId} ,
             userData,
-            { new: true, runValidators: true }
+            { new: true, runValidators: true ,projection: { orders: 0}}, 
         );
 
         if (!updatedUser) {
@@ -36,15 +36,15 @@ const updateUserFromDB = async (userId: number, userData: Partial<TUser>): Promi
         }
 
         return updatedUser;
-    } catch (error) {
+    } catch (error:any) {
         console.error('Error updating user:', error.message);
-        throw new Error('Invalid userId format');
+        
     }
 };
 
 
-const deleteUserFromDB=async(userId:string)=>{
-    const result= await User.findByIdAndDelete(userId)
+const deleteUserFromDB=async(userId:number)=>{
+    const result= await User.findOneAndUpdate({userId:userId})
     return result;
 }
 export const userServices ={

@@ -31,7 +31,7 @@ const filteredUserData = (userData) => {
 };
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { user: userData } = req.body;
+        const userData = req.body;
         const zodParsedData = user_validation_1.createUserValidationSchema.parse(userData);
         const result = yield user_service_1.userServices.createUserIntoDB(zodParsedData);
         const filteredData = filteredUserData(result.toJSON());
@@ -42,6 +42,7 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         });
     }
     catch (err) {
+        console.log(err);
         const formatedError = (0, formatError_1.default)(500, err.message);
         res.status(formatedError.error.code).json(formatedError);
     }
@@ -84,30 +85,56 @@ const getSingleUser = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 const updatedUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userData = req.body;
-        console.log('userData:', userData);
-        const { userId } = req.params;
-        console.log('userId from params:', userId);
+        console.log('user data', userData);
+        const userId = req.params.userId;
         const userId2 = Number(userId);
-        // Ensure that userId is a number
-        if (isNaN(userId2)) {
-            throw new Error('Invalid userId format');
-        }
-        console.log('Parsed userId:', userId);
-        const zodParsedData = user_validation_1.updateUserSchema.parse(userData);
-        console.log('Parsed data:', zodParsedData);
-        const result = yield user_service_1.userServices.updateUserFromDB(userId2, zodParsedData);
-        console.log(result);
+        const zodParsedData = user_validation_1.updateUserSchema.safeParse({ user: userData });
+        console.log('parsed data', zodParsedData);
+        const result = yield user_service_1.userServices.updateUserFromDB(userId2, userData);
+        console.log('result', result);
         res.status(200).json({
-            status: 'success',
+            success: true,
             message: 'User updated successfully',
             data: result,
         });
     }
-    catch (error) {
-        console.error('Error in update process:', error.message);
+    catch (err) {
+        console.error('Error in update process:', err.message);
+        if (err.message === 'User not found') {
+            return res
+                .status((0, formatError_1.default)(404, err.message).error.code)
+                .json((0, formatError_1.default)(404, err.message));
+        }
+        const formatedError = (0, formatError_1.default)(500, err.message);
+        res.status(formatedError.error.code).json(formatedError);
+    }
+});
+const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userId = req.params.userId;
+        const deletedUser = yield user_service_1.userServices.deleteUserFromDB(Number(userId));
+        if (deletedUser) {
+            res.status(200).json({
+                success: true,
+                message: 'User deleted successfully',
+                data: null,
+            });
+        }
+        else {
+            res.status(404).json({
+                success: false,
+                message: 'User not found',
+                error: {
+                    code: 404,
+                    description: 'User not found!',
+                },
+            });
+        }
+    }
+    catch (err) {
         res.status(500).json({
-            status: 'fail',
-            message: error.message || 'Something went wrong',
+            success: false,
+            message: err.message || 'Internal Server Error',
         });
     }
 });
@@ -115,5 +142,6 @@ exports.usersController = {
     createUser,
     getAllUser,
     getSingleUser,
-    updatedUser
+    updatedUser,
+    deleteUser
 };

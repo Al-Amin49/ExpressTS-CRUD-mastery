@@ -5,7 +5,7 @@ const fullNameSchema = z.object({
   lastName: z.string().min(1).max(15),
 });
 
-const addressSchema = z.object({
+ const addressSchema = z.object({
   street: z.string().min(1),
   city: z.string().min(1),
   country: z.string().min(1),
@@ -39,7 +39,16 @@ const createOrderSchema = z.object({
   price: z.number(),
   quantity: z.number(),
 });
-const updateUserSchema = createUserValidationSchema.partial().strip();
+const validUpdateData = {
+  userId: 123,
+  username: 'john_doe',
+  // ... other fields you want to update
+};
+
+
+const updateUserSchema = createUserValidationSchema.partial();
+const isValid = updateUserSchema.safeParse(validUpdateData);
+console.log(isValid);
 const updateOrderSchema = createOrderSchema.partial();
 
 export {

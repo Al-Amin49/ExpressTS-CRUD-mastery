@@ -15,4 +15,5 @@ router
     .route('/users/:userId')
     .get(user_controller_1.usersController.getSingleUser)
     .put(user_controller_1.usersController.updatedUser);
+router.delete('/users/:userId', user_controller_1.usersController.deleteUser);
 exports.userRoutes = router;

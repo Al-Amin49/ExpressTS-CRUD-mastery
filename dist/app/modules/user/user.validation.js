@@ -40,7 +40,14 @@ const createOrderSchema = zod_1.z.object({
     quantity: zod_1.z.number(),
 });
 exports.createOrderSchema = createOrderSchema;
-const updateUserSchema = createUserValidationSchema.partial().strip();
+const validUpdateData = {
+    userId: 123,
+    username: 'john_doe',
+    // ... other fields you want to update
+};
+const updateUserSchema = createUserValidationSchema.partial();
 exports.updateUserSchema = updateUserSchema;
+const isValid = updateUserSchema.safeParse(validUpdateData);
+console.log(isValid);
 const updateOrderSchema = createOrderSchema.partial();
 exports.updateOrderSchema = updateOrderSchema;

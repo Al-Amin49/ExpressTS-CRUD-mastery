@@ -8,20 +8,14 @@ const fullNameSchema= new Schema<TFullName>({
         trim: true,
         required: [true, 'First name is required'],
         maxlength: [20, 'Name can not be more than 20 characters'],
-        validate: {
-          validator: function (value: string) {
-            const firstNameStr = value.charAt(0).toUpperCase() + value.slice(1);
-            return firstNameStr === value; 
-          },
-          message: '{VALUE} is not in capitalize format',
-        },
+        
     },
     lastName:{
         type:String,
         required:[true, 'Last name is required'],
         maxlength:[15 ,'Last Name can not be more than 15 characters']
     }
-})
+}, {_id:false})
 
 const addressSchema=new Schema<TAddress>({
     street:{
@@ -36,7 +30,7 @@ const addressSchema=new Schema<TAddress>({
         type:String,
         required:[true, 'Country is required']
     }
-})
+},{_id:false})
 
 const orderSchema= new Schema<TOrder>({
     productName:{
@@ -91,7 +85,7 @@ const userSchema= new Schema<TUser,UserModel, UserMethods >({
     orders:{
         type:[orderSchema]
     }
-})
+}, )
 
 //middleware for password hashing
 userSchema.pre('save', async function (next) {
