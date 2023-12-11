@@ -13,7 +13,7 @@ exports.userServices = void 0;
 const user_model_1 = require("./user.model");
 const createUserIntoDB = (userData) => __awaiter(void 0, void 0, void 0, function* () {
     if (yield user_model_1.User.isUserExists(Number(userData.userId))) {
-        throw new Error('User aready exists');
+        throw new Error('User not found');
     }
     const result = yield user_model_1.User.create(userData);
     return result;
@@ -42,11 +42,16 @@ const insertProductToDB = (userId, productData) => __awaiter(void 0, void 0, voi
     yield user_model_1.User.findOneAndUpdate({ userId, 'orders': { $exists: true } }, { $push: { 'orders': { productName, price, quantity } } }, { upsert: true, new: true });
     return null;
 });
+const getOrdersByIdFromDB = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = user_model_1.User.findOne({ userId: userId }).select('orders');
+    return result;
+});
 exports.userServices = {
     createUserIntoDB,
     getAllUsersFromDB,
     getSingleUserFromDB,
     updateUserFromDB,
     deleteUserFromDB,
-    insertProductToDB
+    insertProductToDB,
+    getAllOrdersFromDB: getOrdersByIdFromDB
 };

@@ -14,6 +14,8 @@ router
 router.delete('/users/:userId', usersController.deleteUser);
 //insert orders
 router.put('/users/:userId/orders', usersController.insertProduct)
+//order by id
+router.get('/users/:userId/orders',usersController.getAllOrdersById)
  
 
 

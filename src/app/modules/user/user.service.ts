@@ -4,7 +4,7 @@ import { User } from "./user.model";
 
 const createUserIntoDB=async(userData:TUser)=>{
     if(await User.isUserExists(Number(userData.userId))){
-        throw new Error('User aready exists')
+        throw new Error('User not found')
        }
     const result= await User.create(userData)
     return result
@@ -16,7 +16,6 @@ const getAllUsersFromDB=async()=>{
     return result
 }
 const getSingleUserFromDB=async(userId:number | string)=>{
-    
     const result =await User.findOne({userId:userId}, {orders:0}).exec();
     
     if(!result){
@@ -26,7 +25,7 @@ const getSingleUserFromDB=async(userId:number | string)=>{
 }
 
 const updateUserFromDB = async (userId: number | string, userData:Partial<TUser>):Promise<TUser |null>=> {
-
+   
     const result = await User.findOneAndUpdate(
               {userId} ,
             {$set: userData},
@@ -50,6 +49,12 @@ await User.findOneAndUpdate(
 return null;
 
 }
+const getOrdersByIdFromDB=async(userId:number | string)=>{
+const result=User.findOne({userId:userId}).select('orders')
+
+return result;
+}
+
 
 
 export const userServices ={
@@ -58,5 +63,6 @@ export const userServices ={
     getSingleUserFromDB,
     updateUserFromDB,
     deleteUserFromDB,
-    insertProductToDB
+    insertProductToDB,
+    getAllOrdersFromDB: getOrdersByIdFromDB
 }

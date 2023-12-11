@@ -142,6 +142,27 @@ const insertProduct = async (req: Request, res: Response) => {
     res.status(formatedError.error.code).json(formatedError);
   }
 };
+const getAllOrdersById = async (req: Request, res: Response) => {
+  try {
+    const  {userId}  = req.params;
+    const result= await userServices.getAllOrdersFromDB(userId)
+
+    res.status(200).json({
+      success:true,
+      message:'Order fetched successfully!',
+      data:result
+    })
+   
+  } catch (err: any) {
+    if (err.message === 'User not found') {
+      return res
+        .status(formatError(404, err.message).error.code)
+        .json(formatError(404, err.message));
+    }
+    const formatedError = formatError(500, err.message);
+    res.status(formatedError.error.code).json(formatedError);
+  }
+};
 
 
 
@@ -151,5 +172,6 @@ export const usersController = {
   getSingleUser,
   updatedUser,
   deleteUser,
-  insertProduct
+  insertProduct,
+  getAllOrdersById
 };

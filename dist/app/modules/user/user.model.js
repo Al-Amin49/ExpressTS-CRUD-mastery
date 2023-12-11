@@ -93,9 +93,7 @@ const userSchema = new mongoose_1.Schema({
         type: addressSchema,
         required: true
     },
-    orders: {
-        type: [orderSchema]
-    }
+    orders: [orderSchema]
 });
 //middleware for password hashing
 userSchema.pre('save', function (next) {

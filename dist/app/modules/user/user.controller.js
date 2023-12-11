@@ -146,11 +146,32 @@ const insertProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         res.status(formatedError.error.code).json(formatedError);
     }
 });
+const getAllOrdersById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { userId } = req.params;
+        const result = yield user_service_1.userServices.getAllOrdersFromDB(userId);
+        res.status(200).json({
+            success: true,
+            message: 'Order fetched successfully!',
+            data: result
+        });
+    }
+    catch (err) {
+        if (err.message === 'User not found') {
+            return res
+                .status((0, formatError_1.default)(404, err.message).error.code)
+                .json((0, formatError_1.default)(404, err.message));
+        }
+        const formatedError = (0, formatError_1.default)(500, err.message);
+        res.status(formatedError.error.code).json(formatedError);
+    }
+});
 exports.usersController = {
     createUser,
     getAllUser,
     getSingleUser,
     updatedUser,
     deleteUser,
-    insertProduct
+    insertProduct,
+    getAllOrdersById
 };

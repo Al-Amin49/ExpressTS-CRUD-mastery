@@ -18,4 +18,6 @@ router
 router.delete('/users/:userId', user_controller_1.usersController.deleteUser);
 //insert orders
 router.put('/users/:userId/orders', user_controller_1.usersController.insertProduct);
+//order by id
+router.get('/users/:userId/orders', user_controller_1.usersController.getAllOrdersById);
 exports.userRoutes = router;

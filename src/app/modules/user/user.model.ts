@@ -82,9 +82,7 @@ const userSchema= new Schema<TUser,UserModel >({
         type:addressSchema,
         required:true
     },
-    orders:{
-        type:[orderSchema]
-    }
+    orders:[orderSchema]
 }, )
 
 //middleware for password hashing
