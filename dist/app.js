@@ -13,9 +13,9 @@ app.use(express_1.default.json());
 app.use((0, cors_1.default)());
 //application routes
 app.use('/api', user_route_1.userRoutes);
-//not found route
-app.use(not_found_1.default);
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
+//not found route
+app.use(not_found_1.default);
 exports.default = app;

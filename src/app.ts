@@ -10,11 +10,12 @@ app.use(cors());
 
 //application routes
 app.use('/api', userRoutes);
-//not found route
-app.use(notFound);
+
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello World!');
 });
+//not found route
+app.use(notFound);
 
 export default app;
