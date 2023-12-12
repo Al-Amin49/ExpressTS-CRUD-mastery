@@ -1,7 +1,7 @@
 ## Introduction
 The primary goal of this TypeScript-based project is to showcase a simple yet effective implementation of Create, Read, Update, and Delete (CRUD) operations. It includes user management functionalities, such as creating new users, retrieving user details, updating user information, and deleting users. Additionally, users can add products to their orders.
 
-##Installation locally
+## Installation locally
 1. Clone the repository
 ```bash
 git clone https://github.com/Al-Amin49/ExpressTS-CRUD-Essentials.git
@@ -25,4 +25,3 @@ BCRYPT_SALT_ROUNDS=12
 npm run dev
 ```
 
-## Api endpoints
